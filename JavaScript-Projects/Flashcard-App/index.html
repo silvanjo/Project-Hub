@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Study App</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .flashcard {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-5px);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #667eea;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #5a6fd6;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .progress {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Flashcard Study App</h1>
+        <div id="flashcard" class="flashcard"></div>
+        <div class="controls">
+            <button id="prevBtn">Previous</button>
+            <button id="flipBtn">Flip</button>
+            <button id="nextBtn">Next</button>
+        </div>
+        <div class="controls">
+            <button id="unknownBtn">Don't Know</button>
+            <button id="knownBtn">Know</button>
+        </div>
+        <div id="progress" class="progress"></div>
+    </div>
+
+    <script>
+        const flashcards = [
+            { front: "What is the capital of France?", back: "Paris" },
+            { front: "What is the largest planet in our solar system?", back: "Jupiter" },
+            { front: "Who painted the Mona Lisa?", back: "Leonardo da Vinci" },
+            { front: "What is the chemical symbol for gold?", back: "Au" },
+            { front: "What year did World War II end?", back: "1945" }
+        ];
+
+        let currentCardIndex = 0;
+        let isShowingFront = true;
+        const knownCards = new Set();
+
+        const flashcardEl = document.getElementById('flashcard');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const flipBtn = document.getElementById('flipBtn');
+        const unknownBtn = document.getElementById('unknownBtn');
+        const knownBtn = document.getElementById('knownBtn');
+        const progressEl = document.getElementById('progress');
+
+        function updateCard() {
+            const card = flashcards[currentCardIndex];
+            flashcardEl.textContent = isShowingFront ? card.front : card.back;
+            prevBtn.disabled = currentCardIndex === 0;
+            nextBtn.disabled = currentCardIndex === flashcards.length - 1;
+            updateProgress();
+        }
+
+        function flipCard() {
+            isShowingFront = !isShowingFront;
+            updateCard();
+        }
+
+        function nextCard() {
+            if (currentCardIndex < flashcards.length - 1) {
+                currentCardIndex++;
+                isShowingFront = true;
+                updateCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                isShowingFront = true;
+                updateCard();
+            }
+        }
+
+        function markAsKnown() {
+            knownCards.add(currentCardIndex);
+            nextCard();
+        }
+
+        function markAsUnknown() {
+            knownCards.delete(currentCardIndex);
+            nextCard();
+        }
+
+        function updateProgress() {
+            const totalCards = flashcards.length;
+            const knownCount = knownCards.size;
+            progressEl.textContent = `Progress: ${knownCount}/${totalCards} (${Math.round(knownCount/totalCards*100)}%)`;
+        }
+
+        flipBtn.addEventListener('click', flipCard);
+        nextBtn.addEventListener('click', nextCard);
+        prevBtn.addEventListener('click', prevCard);
+        knownBtn.addEventListener('click', markAsKnown);
+        unknownBtn.addEventListener('click', markAsUnknown);
+        flashcardEl.addEventListener('click', flipCard);
+
+        updateCard();
+    </script>
+</body>
+</html>

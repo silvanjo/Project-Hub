@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorite Recipes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #recipeList {
+            margin-top: 20px;
+        }
+        .recipe {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .recipe h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Favorite Recipes</h1>
+        
+        <input type="text" id="searchInput" placeholder="Search recipes...">
+        
+        <h2>Add New Recipe</h2>
+        <input type="text" id="recipeName" placeholder="Recipe Name">
+        <textarea id="recipeIngredients" placeholder="Ingredients (one per line)"></textarea>
+        <textarea id="recipeInstructions" placeholder="Instructions"></textarea>
+        <button onclick="addRecipe()">Add Recipe</button>
+        
+        <div id="recipeList"></div>
+    </div>
+
+    <script>
+        let recipes = [];
+
+        function addRecipe() {
+            const name = document.getElementById('recipeName').value;
+            const ingredients = document.getElementById('recipeIngredients').value;
+            const instructions = document.getElementById('recipeInstructions').value;
+            
+            if (name && ingredients && instructions) {
+                recipes.push({ name, ingredients, instructions });
+                updateRecipeList();
+                clearInputs();
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        function clearInputs() {
+            document.getElementById('recipeName').value = '';
+            document.getElementById('recipeIngredients').value = '';
+            document.getElementById('recipeInstructions').value = '';
+        }
+
+        function updateRecipeList() {
+            const recipeList = document.getElementById('recipeList');
+            recipeList.innerHTML = '';
+            
+            recipes.forEach(recipe => {
+                const recipeElement = document.createElement('div');
+                recipeElement.className = 'recipe';
+                recipeElement.innerHTML = `
+                    <h3>${recipe.name}</h3>
+                    <h4>Ingredients:</h4>
+                    <p>${recipe.ingredients.replace(/\n/g, '<br>')}</p>
+                    <h4>Instructions:</h4>
+                    <p>${recipe.instructions}</p>
+                `;
+                recipeList.appendChild(recipeElement);
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredRecipes = recipes.filter(recipe => 
+                recipe.name.toLowerCase().includes(searchTerm) ||
+                recipe.ingredients.toLowerCase().includes(searchTerm) ||
+                recipe.instructions.toLowerCase().includes(searchTerm)
+            );
+            
+            const recipeList = document.getElementById('recipeList');
+            recipeList.innerHTML = '';
+            
+            filteredRecipes.forEach(recipe => {
+                const recipeElement = document.createElement('div');
+                recipeElement.className = 'recipe';
+                recipeElement.innerHTML = `
+                    <h3>${recipe.name}</h3>
+                    <h4>Ingredients:</h4>
+                    <p>${recipe.ingredients.replace(/\n/g, '<br>')}</p>
+                    <h4>Instructions:</h4>
+                    <p>${recipe.instructions}</p>
+                `;
+                recipeList.appendChild(recipeElement);
+            });
+        });
+    </script>
+</body>
+</html>

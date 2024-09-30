@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NightOwl VPN - Secure Your Digital Life</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #0f0f1a;
+            --text-color: #e0e0e0;
+            --accent-color: #8c52ff;
+            --secondary-color: #1a1a2e;
+            --gradient-bg: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: var(--gradient-bg);
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(140, 82, 255, 0.5);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style-type: none;
+        }
+        
+        nav ul li {
+            margin-left: 2rem;
+        }
+        
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+        }
+        
+        section {
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background: var(--secondary-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent-color), #b385ff);
+            color: var(--bg-color);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(140, 82, 255, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(140, 82, 255, 0.4);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature {
+            background: var(--gradient-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        
+        #pricing ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        #pricing li {
+            background: var(--gradient-bg);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        footer {
+            background: var(--gradient-bg);
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">NightOwl VPN</div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <h1>Secure Your Digital Life with NightOwl VPN</h1>
+            <p>Browse anonymously, protect your data, and access content from anywhere in the world.</p>
+            <a href="#pricing" class="cta-button">Get Started</a>
+        </section>
+
+        <section id="features">
+            <h2>Features</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Bank-grade Encryption</h3>
+                    <p>Your data is protected with AES-256 encryption, the same standard used by financial institutions.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                    <h3>Global Server Network</h3>
+                    <p>Access content from anywhere with our network of high-speed servers across 50+ countries.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon"><i class="fas fa-user-secret"></i></div>
+                    <h3>No-logs Policy</h3>
+                    <p>We never track, collect, or share your browsing data. Your privacy is our top priority.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing">
+            <h2>Pricing</h2>
+            <p>Choose the plan that fits your needs:</p>
+            <ul>
+                <li><span>Monthly</span> <span>$9.99/month</span></li>
+                <li><span>Yearly</span> <span>$5.99/month</span></li>
+                <li><span>2-Year Plan</span> <span>$3.99/month</span></li>
+            </ul>
+            <a href="#" class="cta-button">Subscribe Now</a>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Have questions? Reach out to our 24/7 support team:</p>
+            <p><i class="fas fa-envelope"></i> Email: support@nightowlvpn.com</p>
+            <p><i class="fas fa-phone"></i> Phone: 1-800-NIGHT-OWL</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 NightOwl VPN. All rights reserved.</p>
+    </footer>
+</body>
+</html>

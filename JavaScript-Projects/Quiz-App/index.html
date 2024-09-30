@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kahoot-style Quiz App</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        :root {
+            --primary-color: #46178f;
+            --secondary-color: #f2f2f2;
+            --accent-color: #ff3355;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        #question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        #timer {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .option:nth-child(1) { background-color: #ff4136; }
+        .option:nth-child(2) { background-color: #0074D9; }
+        .option:nth-child(3) { background-color: #FFDC00; }
+        .option:nth-child(4) { background-color: #2ECC40; }
+
+        .option:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        #score {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            color: var(--primary-color);
+        }
+
+        #next-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #next-btn:hover {
+            background-color: #ff1f48;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kahoot-style Quiz</h1>
+        <div id="timer">Time: 20</div>
+        <div id="question"></div>
+        <div class="options">
+            <button class="option" data-index="0"></button>
+            <button class="option" data-index="1"></button>
+            <button class="option" data-index="2"></button>
+            <button class="option" data-index="3"></button>
+        </div>
+        <div id="score">Score: 0</div>
+        <button id="next-btn" class="hidden">Next Question</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                options: ["London", "Berlin", "Paris", "Madrid"],
+                correctIndex: 2
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Mars", "Jupiter", "Venus", "Saturn"],
+                correctIndex: 0
+            },
+            {
+                question: "Who painted the Mona Lisa?",
+                options: ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Michelangelo"],
+                correctIndex: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 20;
+        let timer;
+
+        const questionEl = document.getElementById('question');
+        const optionEls = document.querySelectorAll('.option');
+        const timerEl = document.getElementById('timer');
+        const scoreEl = document.getElementById('score');
+        const nextBtn = document.getElementById('next-btn');
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            nextBtn.classList.add('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetTimer();
+            const question = questions[currentQuestionIndex];
+            questionEl.textContent = question.question;
+
+            optionEls.forEach((el, index) => {
+                el.textContent = question.options[index];
+                el.disabled = false;
+                el.classList.remove('correct', 'incorrect');
+            });
+
+            nextBtn.classList.add('hidden');
+        }
+
+        function resetTimer() {
+            timeLeft = 20;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `Time: ${timeLeft}`;
+                if (timeLeft === 0) {
+                    clearInterval(timer);
+                    disableOptions();
+                    showNextButton();
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(selectedIndex) {
+            clearInterval(timer);
+            disableOptions();
+            
+            const question = questions[currentQuestionIndex];
+            if (selectedIndex === question.correctIndex) {
+                score++;
+                optionEls[selectedIndex].classList.add('correct');
+            } else {
+                optionEls[selectedIndex].classList.add('incorrect');
+                optionEls[question.correctIndex].classList.add('correct');
+            }
+            
+            scoreEl.textContent = `Score: ${score}`;
+            showNextButton();
+        }
+
+        function disableOptions() {
+            optionEls.forEach(el => el.disabled = true);
+        }
+
+        function showNextButton() {
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.textContent = 'Finish Quiz';
+                nextBtn.classList.remove('hidden');
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            questionEl.textContent = `Quiz finished! Your score: ${score}/${questions.length}`;
+            timerEl.classList.add('hidden');
+            optionEls.forEach(el => el.classList.add('hidden'));
+            nextBtn.classList.add('hidden');
+        }
+
+        optionEls.forEach(el => {
+            el.addEventListener('click', () => checkAnswer(parseInt(el.getAttribute('data-index'))));
+        });
+
+        nextBtn.addEventListener('click', nextQuestion);
+
+        startQuiz();
+    </script>
+</body>
+</html>

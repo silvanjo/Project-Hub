@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Note-Taking App</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .app-container {
+            display: flex;
+            gap: 20px;
+            height: calc(100vh - 100px);
+        }
+
+        .notes-list {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .note-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .note-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .note-item.active {
+            background-color: #e0e0e0;
+        }
+
+        .editor-container {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor, .preview {
+            flex: 1;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .editor {
+            background-color: #fff;
+            resize: none;
+            border: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .preview {
+            background-color: #fff;
+            overflow-y: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .preview h1, .preview h2, .preview h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .preview p {
+            margin-bottom: 10px;
+        }
+
+        .preview ul, .preview ol {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .preview code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .preview pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Markdown Note-Taking App</h1>
+        <div class="app-container">
+            <div class="notes-list" id="notesList">
+                <button id="newNoteBtn">New Note</button>
+            </div>
+            <div class="editor-container">
+                <textarea id="editor" class="editor" placeholder="Write your markdown here..."></textarea>
+                <div id="preview" class="preview"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
+    <script>
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const notesList = document.getElementById('notesList');
+        const newNoteBtn = document.getElementById('newNoteBtn');
+
+        let notes = [
+            { id: 1, content: "# Welcome to Your Markdown Note App\n\nThis is your first note. You can edit it or create new ones!" }
+        ];
+        let currentNoteIndex = 0;
+
+        function createNote() {
+            const newNote = {
+                id: Date.now(),
+                content: ''
+            };
+            notes.push(newNote);
+            currentNoteIndex = notes.length - 1;
+            renderNotesList();
+            editor.value = '';
+            updatePreview();
+        }
+
+        function renderNotesList() {
+            notesList.innerHTML = '<button id="newNoteBtn">New Note</button>';
+            notes.forEach((note, index) => {
+                const noteItem = document.createElement('div');
+                noteItem.classList.add('note-item');
+                if (index === currentNoteIndex) {
+                    noteItem.classList.add('active');
+                }
+                noteItem.textContent = note.content.split('\n')[0] || 'Untitled Note';
+                noteItem.addEventListener('click', () => selectNote(index));
+                notesList.appendChild(noteItem);
+            });
+            document.getElementById('newNoteBtn').addEventListener('click', createNote);
+        }
+
+        function selectNote(index) {
+            currentNoteIndex = index;
+            editor.value = notes[index].content;
+            updatePreview();
+            renderNotesList();
+        }
+
+        function updateNote() {
+            if (currentNoteIndex > -1) {
+                notes[currentNoteIndex].content = editor.value;
+                renderNotesList();
+            }
+        }
+
+        function updatePreview() {
+            preview.innerHTML = marked(editor.value);
+        }
+
+        editor.addEventListener('input', () => {
+            updateNote();
+            updatePreview();
+        });
+
+        newNoteBtn.addEventListener('click', createNote);
+
+        renderNotesList();
+        selectNote(0);
+    </script>
+</body>
+</html>
