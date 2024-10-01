@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #tasks { margin-top: 20px; }
+        .task { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; }
+        button { cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>Task Manager</h1>
+
+    <!-- Task Input Form -->
+    <div>
+        <input type="text" id="taskInput" placeholder="New Task">
+        <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <!-- Task List -->
+    <div id="tasks"></div>
+
+    <script>
+        // Fetch all tasks and display them
+        async function fetchTasks() {
+            const response = await fetch('http://localhost:3000/tasks');
+            const tasks = await response.json();
+            const tasksDiv = document.getElementById('tasks');
+            tasksDiv.innerHTML = '';  // Clear the tasks div
+
+            tasks.forEach(task => {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task';
+                taskDiv.innerHTML = `
+                    ${task.name} 
+                    <button onclick="deleteTask(${task.id})">Delete</button>
+                `;
+                tasksDiv.appendChild(taskDiv);
+            });
+        }
+
+        // Add a new task
+        async function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskName = taskInput.value;
+
+            if (taskName === '') {
+                alert('Task cannot be empty');
+                return;
+            }
+
+            const response = await fetch('http://localhost:3000/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: taskName })
+            });
+
+            if (response.ok) {
+                fetchTasks();  // Refresh the task list
+                taskInput.value = '';  // Clear the input field
+            }
+        }
+
+        // Delete a task
+        async function deleteTask(id) {
+            const response = await fetch(`http://localhost:3000/tasks/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                fetchTasks();  // Refresh the task list
+            }
+        }
+
+        // Fetch tasks when the page loads
+        window.onload = fetchTasks;
+    </script>
+
+</body>
+</html>
+
