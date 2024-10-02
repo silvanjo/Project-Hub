@@ -7,17 +7,18 @@
 #define DATABASE "elements.db"
 
 // Function declarations
-void initialize_db();
+void initialize_db(sqlite3 *db);
 void add_element(sqlite3 *db, const char *element);
 void delete_element(sqlite3 *db, const char *element);
 void list_elements(sqlite3 *db);
 void pick_random_element(sqlite3 *db);
+void clear_input_buffer();
 
 int main() {
     sqlite3 *db;
     int rc;
     char option;
-    char element[100];
+    char element[256];
 
     // Open database
     rc = sqlite3_open(DATABASE, &db);
@@ -37,16 +38,19 @@ int main() {
         printf("5. Exit\n");
         printf("Choose an option: ");
         scanf(" %c", &option);
+        clear_input_buffer();  // Clear any leftover newline characters in the input buffer
 
         switch (option) {
             case '1':
                 printf("Enter element to add: ");
-                scanf("%s", element);
+                fgets(element, sizeof(element), stdin);
+                element[strcspn(element, "\n")] = 0;  // Remove trailing newline character
                 add_element(db, element);
                 break;
             case '2':
                 printf("Enter element to delete: ");
-                scanf("%s", element);
+                fgets(element, sizeof(element), stdin);
+                element[strcspn(element, "\n")] = 0;  // Remove trailing newline character
                 delete_element(db, element);
                 break;
             case '3':
@@ -82,7 +86,7 @@ void initialize_db(sqlite3 *db) {
 // Add an element to the database
 void add_element(sqlite3 *db, const char *element) {
     char *err_msg = 0;
-    char sql[256];
+    char sql[512];
     
     sprintf(sql, "INSERT INTO elements (name) VALUES ('%s');", element);
     
@@ -97,14 +101,24 @@ void add_element(sqlite3 *db, const char *element) {
 }
 
 // Delete an element from the database
-void delete_element(sqlite3 *db, const char *element) {
+// Delete an element from the database by name or ID
+void delete_element(sqlite3 *db, const char *input) {
     char *err_msg = 0;
-    char sql[256];
-    
-    sprintf(sql, "DELETE FROM elements WHERE name = '%s';", element);
-    
+    char sql[512];
+
+    // Check if input is numeric (indicating an ID)
+    int id = atoi(input);  // Converts the input to an integer, returns 0 if not a number
+
+    if (id > 0) {
+        // Input is a valid ID
+        sprintf(sql, "DELETE FROM elements WHERE id = %d;", id);
+    } else {
+        // Input is a name (not a number)
+        sprintf(sql, "DELETE FROM elements WHERE name = '%s';", input);
+    }
+
     int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-    
+
     if (rc != SQLITE_OK) {
         fprintf(stderr, "SQL error: %s\n", err_msg);
         sqlite3_free(err_msg);
@@ -113,9 +127,10 @@ void delete_element(sqlite3 *db, const char *element) {
     }
 }
 
+
 // List all elements in the database
 void list_elements(sqlite3 *db) {
-    const char *sql = "SELECT name FROM elements;";
+    const char *sql = "SELECT id, name FROM elements;";
     sqlite3_stmt *stmt;
     
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
@@ -127,7 +142,7 @@ void list_elements(sqlite3 *db) {
     
     printf("\nElements:\n");
     while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
-        printf("%s\n", sqlite3_column_text(stmt, 0));
+        printf("%d: %s\n", sqlite3_column_int(stmt, 0), sqlite3_column_text(stmt, 1));
     }
     
     sqlite3_finalize(stmt);
@@ -152,5 +167,11 @@ void pick_random_element(sqlite3 *db) {
     }
     
     sqlite3_finalize(stmt);
+}
+
+// Clear input buffer
+void clear_input_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {}
 }
 
