@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox Examples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .example {
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+
+        /* Card Layout */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            flex: 1 1 200px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Centered Content */
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            background-color: #f0f0f0;
+        }
+
+        /* Holy Grail Layout */
+        .holy-grail {
+            display: flex;
+            flex-direction: column;
+            min-height: 300px;
+        }
+        .holy-grail-header, .holy-grail-footer {
+            background-color: #ddd;
+            padding: 10px;
+        }
+        .holy-grail-body {
+            display: flex;
+            flex: 1;
+        }
+        .holy-grail-content {
+            flex: 1;
+            padding: 10px;
+        }
+        .holy-grail-nav, .holy-grail-ads {
+            flex: 0 0 150px;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+        .holy-grail-nav {
+            order: -1;
+        }
+
+        /* Equal Height Columns */
+        .equal-height-container {
+            display: flex;
+            gap: 20px;
+        }
+        .equal-height-column {
+            flex: 1;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="example">
+        <h2>1. Card Layout</h2>
+        <div class="card-container">
+            <div class="card">
+                <h3>Card 1</h3>
+                <p>This is the content for card 1.</p>
+            </div>
+            <div class="card">
+                <h3>Card 2</h3>
+                <p>This is the content for card 2.</p>
+            </div>
+            <div class="card">
+                <h3>Card 3</h3>
+                <p>This is the content for card 3.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>2. Centered Content</h2>
+        <div class="center-container">
+            <div>This content is centered both vertically and horizontally.</div>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>3. Holy Grail Layout</h2>
+        <div class="holy-grail">
+            <header class="holy-grail-header">Header</header>
+            <div class="holy-grail-body">
+                <main class="holy-grail-content">Main content</main>
+                <nav class="holy-grail-nav">Navigation</nav>
+                <aside class="holy-grail-ads">Ads</aside>
+            </div>
+            <footer class="holy-grail-footer">Footer</footer>
+        </div>
+    </div>
+
+    <div class="example">
+        <h2>4. Equal Height Columns</h2>
+        <div class="equal-height-container">
+            <div class="equal-height-column">
+                <h3>Column 1</h3>
+                <p>This is some content.</p>
+            </div>
+            <div class="equal-height-column">
+                <h3>Column 2</h3>
+                <p>This column has more content, but all columns will have equal height.</p>
+                <p>Extra paragraph here.</p>
+            </div>
+            <div class="equal-height-column">
+                <h3>Column 3</h3>
+                <p>This is some content.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
